@@ -10,4 +10,20 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="ingrese_su_nombre">Ingrese su nombre</string>
+    <string name="button_login">Ingresar</string>
+    <string name="button_register">Registrarse</string>
+    <string name="editTextHint_email">email</string>
+    <string name="editTextHint_password">contraseña</string>
+    <string name="textView_welcome">Bienvenido</string>
+    <string name="button_back_to_login">Volver Atrás</string>
+    <string name="edit_text_hint_group">Ingrese su grupo</string>
+    <string name="edit_text_hint_comission">Ingrese su comisión</string>
+    <string name="edit_text_hint_password">Ingrese su contraseña</string>
+    <string name="edit_text_hint_dni">Ingrese su dni</string>
+    <string name="edit_text_hint_lastname">Ingrese su apellido</string>
+    <string name="edit_text_hint_name">Ingrese su nombre</string>
+    <string name="edit_text_hint_email">Ingrese su E-mail</string>
+    <string name="button_register_sensor_value">Registrar Proximidad</string>
+    <string name="button_register__proximity_sensor_value">Registrar nivel de Proximidad</string>
+    <string name="button_register_lux_sensor_value">Registrar nivel de luz</string>
 </resources>

@@ -7,42 +7,72 @@
     tools:context=".MenuActivity">
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="23dp"
-        tools:layout_editor_absoluteY="14dp" />
+        android:id="@+id/textViewUser"
+        android:layout_width="1dp"
+        android:layout_height="14dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.065"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.048" />
 
     <LinearLayout
-        android:layout_width="347dp"
-        android:layout_height="159dp"
+        android:id="@+id/linearLayoutLux"
+        android:layout_width="350dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="75dp"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="23dp"
-        tools:layout_editor_absoluteY="119dp">
-
-    </LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:layout_width="347dp"
-        android:layout_height="159dp"
+        android:id="@+id/linearLayoutProximity"
+        android:layout_width="350dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="360dp"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="23dp"
-        tools:layout_editor_absoluteY="425dp"></LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.531"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/buttonRegisterProximitySensor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="281dp"
-        tools:layout_editor_absoluteY="630dp" />
+        android:layout_marginTop="20dp"
+        android:text="@string/button_register__proximity_sensor_value"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutProximity"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/buttonBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="23dp"
-        tools:layout_editor_absoluteY="630dp" />
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginBottom="40dp"
+        android:text="@string/button_back_to_login"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buttonRegisterLuxSensor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/button_register_lux_sensor_value"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutLux" />
 </androidx.constraintlayout.widget.ConstraintLayout>

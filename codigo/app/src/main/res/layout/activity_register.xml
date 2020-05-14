@@ -6,85 +6,115 @@
     android:layout_height="match_parent"
     tools:context=".RegisterActivity">
 
-    <EditText
-        android:id="@+id/editText10"
+    <Button
+        android:id="@+id/buttonRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number"
-        tools:layout_editor_absoluteX="83dp"
-        tools:layout_editor_absoluteY="589dp" />
+        android:layout_marginBottom="96dp"
+        android:text="@string/button_register"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonBackLogin"
+        app:layout_constraintTop_toBottomOf="@+id/editTextRegisterGroup" />
+
+    <Button
+        android:id="@+id/buttonBackLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginBottom="96dp"
+        android:text="@string/button_back_to_login"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextRegisterGroup"
+        app:layout_constraintVertical_bias="0.509" />
 
     <EditText
-        android:id="@+id/editText8"
+        android:id="@+id/editTextRegisterGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:ems="10"
+        android:hint="@string/edit_text_hint_group"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextRegisterComission" />
+
+    <EditText
+        android:id="@+id/editTextRegisterEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="@string/edit_text_hint_email"
         android:inputType="textEmailAddress"
-        tools:layout_editor_absoluteX="82dp"
-        tools:layout_editor_absoluteY="301dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextRegisterDni" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/editTextRegisterName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:autofillHints=""
         android:ems="10"
+        android:hint="@string/edit_text_hint_name"
         android:inputType="textPersonName"
-        android:text="@string/ingrese_su_nombre"
-        tools:layout_editor_absoluteX="82dp"
-        tools:layout_editor_absoluteY="51dp"
-        android:autofillHints="" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/editTextRegisterLastname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:ems="10"
+        android:hint="@string/edit_text_hint_lastname"
         android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteX="83dp"
-        tools:layout_editor_absoluteY="135dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextRegisterName" />
 
     <EditText
-        android:id="@+id/editText5"
+        android:id="@+id/editTextRegisterDni"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:ems="10"
+        android:hint="@string/edit_text_hint_dni"
         android:inputType="number"
-        tools:layout_editor_absoluteX="83dp"
-        tools:layout_editor_absoluteY="219dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextRegisterLastname" />
 
     <EditText
-        android:id="@+id/editText7"
+        android:id="@+id/editTextRegisterPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:ems="10"
+        android:hint="@string/edit_text_hint_password"
         android:inputType="textPassword"
-        tools:layout_editor_absoluteX="86dp"
-        tools:layout_editor_absoluteY="412dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextRegisterEmail" />
 
     <EditText
-        android:id="@+id/editText9"
+        android:id="@+id/editTextRegisterComission"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:ems="10"
+        android:hint="@string/edit_text_hint_comission"
         android:inputType="number"
-        tools:layout_editor_absoluteX="86dp"
-        tools:layout_editor_absoluteY="500dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextRegisterPassword" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="34dp"
-        tools:layout_editor_absoluteY="663dp" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="271dp"
-        tools:layout_editor_absoluteY="666dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
