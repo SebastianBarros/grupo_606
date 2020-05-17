@@ -1,16 +1,18 @@
 package com.example.barros_costa_tp2_2020;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private String name;
     private String email;
     private String lastName;
     private String password;
     private String dni;
-    private int comision;
-    private int group;
+    private String comision;
+    private String group;
     private String token;
 
-    public User(String name, String email, String lastName, String password, String dni, int comision, int group) {
+    public User(String name, String email, String lastName, String password, String dni, String comision, String group) {
         this.name = name;
         this.email = email;
         this.lastName = lastName;
@@ -20,12 +22,25 @@ public class User {
         this.group = group;
     }
 
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
     public String getName() {
         return name;
     }
 
     public String getToken() {
         return token;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setToken(String token) {
