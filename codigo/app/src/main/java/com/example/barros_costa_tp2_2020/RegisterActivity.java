@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -41,6 +42,11 @@ public class RegisterActivity extends AppCompatActivity {
         User user = createuser();
         //do stuff with the user
         //if everything is ok
+        //Check if there's an active network connection
+        if(!InternetConnectionService.thereIsInternetConnection(RegisterActivity.this)){
+            Toast.makeText(RegisterActivity.this, "No se encuentra conectado a Internet", Toast.LENGTH_LONG).show();
+            return;
+        }
         if(true) {
             RegisterActivity.this.startActivity(new Intent(RegisterActivity.this, MenuActivity.class));
         }
@@ -52,10 +58,10 @@ public class RegisterActivity extends AppCompatActivity {
         TextView dni = findViewById(R.id.editTextRegisterDni);
         TextView mail =  findViewById(R.id.editTextRegisterEmail);
         TextView password =  findViewById(R.id.editTextRegisterPassword);
-        TextView comission = findViewById(R.id.editTextRegisterComission);
+        TextView course = findViewById(R.id.editTextRegisterComission);
         TextView group = findViewById(R.id.editTextRegisterGroup);
         return new User(name.getText().toString(), lastName.getText().toString(), dni.getText().toString(),
-                        mail.getText().toString(), password.getText().toString(), comission.getText().toString(),
+                        mail.getText().toString(), password.getText().toString(), course.getText().toString(),
                         group.getText().toString());
     }
 

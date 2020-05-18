@@ -80,7 +80,7 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
 
         }
 
-        protected void onPaused()
+        protected void onPause()
         {
             super.onPause();
             sensorManagerLux.unregisterListener(this);

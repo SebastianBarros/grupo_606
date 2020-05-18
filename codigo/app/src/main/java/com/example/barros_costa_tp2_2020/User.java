@@ -8,17 +8,17 @@ public class User implements Serializable {
     private String lastName;
     private String password;
     private String dni;
-    private String comision;
+    private String course;
     private String group;
     private String token;
 
-    public User(String name, String email, String lastName, String password, String dni, String comision, String group) {
+    public User(String name, String email, String lastName, String password, String dni, String course, String group) {
         this.name = name;
         this.email = email;
         this.lastName = lastName;
         this.password = password;
         this.dni = dni;
-        this.comision = comision;
+        this.course = course;
         this.group = group;
     }
 
