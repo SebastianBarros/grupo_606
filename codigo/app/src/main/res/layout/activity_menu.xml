@@ -27,7 +27,18 @@
         app:layout_constraintHorizontal_bias="0.524"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.108" />
+        app:layout_constraintVertical_bias="0.108" >
+
+        <TextView
+            android:id="@+id/textViewLux"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="@string/text_view_lux"
+            android:textSize="30sp"
+            android:typeface="sans" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayoutProximity"
@@ -39,7 +50,16 @@
         app:layout_constraintHorizontal_bias="0.442"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.585" />
+        app:layout_constraintVertical_bias="0.585" >
+
+        <TextView
+            android:id="@+id/textViewProximity"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/text_view_proximity"
+            android:textSize="30sp" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/buttonRegisterProximitySensor"
