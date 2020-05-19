@@ -22,12 +22,17 @@ import org.w3c.dom.Text;
 
 public class MenuActivity extends AppCompatActivity implements SensorEventListener {
 
+    private static final String PROXIMITY = "PROXIMITY";
+    private static final String LIGHT = "LIGHT";
+    private static final int LENGTH = 3;
     // variables de managment de sensores
     private SensorManager sensorManagerLux;
     private SensorManager sensorManagerProximity;
     //objeto sensor donde seran registrados cada sensor
     private Sensor lux;
     private Sensor proximity;
+    private float lightValues[] = new float[LENGTH];
+    private float proximityValues[] = new float[LENGTH];
 
 
     @Override
@@ -109,20 +114,61 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
         float proximity,lux; // variables tipo float para almacenar los valores captados por el sensor
 
         //Esta lógica es para diferenciar los eventos del sensor .getType me da el tipo de sensor que mensajeo a event.sensor
-        if (event.sensor.getType() == Sensor.TYPE_PROXIMITY)
-        {
+        if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
             proximity = event.values[0];
-            Log.i("valor proximidad:", String.valueOf(proximity));
+            Log.i("valor proximidad:", String.valueOf(proximity) + event.timestamp);
+
+
+            //la primera vez que se ejecute (y no este el sharedPreferences, el array va a estar vacio. Vamos a guardar los primeros 3 valores.
+            // Dsp los vamos actualizando a medida que cambien. El 3 es un valor aleatorio que elegi. Si querés mostrar 10 valores en pantalla, entonces acá poner un 10.
+            if(proximityValues.length < LENGTH) {
+                proximityValues[proximityValues.length] = proximity;
+            }
+
+            if(proximity != proximityValues[0]){
+                changeValues(proximity, PROXIMITY);
+            }
+            //acá llamarías al método para mostrar en pantalla, en el vector tenés los valores
+
             textViewProximity.setText(Float.toString(proximity));  //seteo el ultimo valor que cambio de proximidad
+
         }
-        if (event.sensor.getType() == Sensor.TYPE_LIGHT)
-        {
+
+        if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
             lux = event.values[0];
             Log.i("valor luz:", String.valueOf(lux));
+
+
+            //la primera vez que se ejecute (y no este el sharedPreferences, el array va a estar vacio. Vamos a guardar los primeros 3 valores.
+            // Dsp los vamos actualizando a medida que cambien. El 3 es un valor aleatorio que elegi. Si querés mostrar 10 valores en pantalla, entonces acá poner un 10.
+            if(proximityValues.length < LENGTH) {
+                proximityValues[proximityValues.length] = lux;
+            }
+
+            if(lux != lightValues[0] && Math.abs(event.values[0] - lightValues[0]) > 50) {
+                changeValues(lux, LIGHT);
+            }
+
+            //acá llamarías al método para mostrar en pantalla, en el vector tenés los valores
             textViewLux.setText(Float.toString(lux)); // seteo el ultimo valor que cambio el nivel de luz
         }
 
     }
+
+    private void changeValues(float value, String type) {
+        if(PROXIMITY.equals(type)) {
+            for(int i = proximityValues.length - 1; i > 0; i--) {
+                proximityValues[i] = proximityValues[i-1];
+            }
+            proximityValues[0] = value;
+        } else {
+            for(int i = lightValues.length - 1; i > 0; i--) {
+                lightValues[i] = lightValues[i-1];
+            }
+            lightValues[0] = value;
+        }
+    }
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
