@@ -33,7 +33,7 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
     private Sensor lux;
     private Sensor proximity;
     private List<Float> lightValues = new ArrayList<>();
-    private List<Float> proximityValues = new ArrayList<Float>();
+    private List<Float> proximityValues = new ArrayList<>();
 
 
     @Override
