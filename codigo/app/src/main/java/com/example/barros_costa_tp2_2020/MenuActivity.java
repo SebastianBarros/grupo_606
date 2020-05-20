@@ -2,7 +2,6 @@ package com.example.barros_costa_tp2_2020;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -11,28 +10,30 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
 
 public class MenuActivity extends AppCompatActivity implements SensorEventListener {
 
     private static final String PROXIMITY = "PROXIMITY";
     private static final String LIGHT = "LIGHT";
-    private static final int LENGTH = 3;
+    private static final int MAX_LENGTH = 3;
     // variables de managment de sensores
     private SensorManager sensorManagerLux;
     private SensorManager sensorManagerProximity;
     //objeto sensor donde seran registrados cada sensor
     private Sensor lux;
     private Sensor proximity;
-    private float lightValues[] = new float[LENGTH];
-    private float proximityValues[] = new float[LENGTH];
+    private List<Float> lightValues = new ArrayList<>();
+    private List<Float> proximityValues = new ArrayList<Float>();
 
 
     @Override
@@ -120,13 +121,15 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
 
 
             //la primera vez que se ejecute (y no este el sharedPreferences, el array va a estar vacio. Vamos a guardar los primeros 3 valores.
-            // Dsp los vamos actualizando a medida que cambien. El 3 es un valor aleatorio que elegi. Si querés mostrar 10 valores en pantalla, entonces acá poner un 10.
-            if(proximityValues.length < LENGTH) {
-                proximityValues[proximityValues.length] = proximity;
+            // Dsp los vamos actualizando a medida que cambien. En 0 esta el valor mas actual, en 2 esta el mas viejo.
+            // Cada vez que hago un add en la pos 0, desplaza los demas, y dsp elimino la pos 3 para mantener q sea de 3 posiciones.
+            if(proximityValues.size() < MAX_LENGTH) {
+                proximityValues.add(proximity);
             }
 
-            if(proximity != proximityValues[0]){
-                changeValues(proximity, PROXIMITY);
+            if(proximity != proximityValues.get(0)){
+                proximityValues.add(0, proximity);
+                proximityValues.remove(MAX_LENGTH);
             }
             //acá llamarías al método para mostrar en pantalla, en el vector tenés los valores
 
@@ -141,32 +144,19 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
 
             //la primera vez que se ejecute (y no este el sharedPreferences, el array va a estar vacio. Vamos a guardar los primeros 3 valores.
             // Dsp los vamos actualizando a medida que cambien. El 3 es un valor aleatorio que elegi. Si querés mostrar 10 valores en pantalla, entonces acá poner un 10.
-            if(proximityValues.length < LENGTH) {
-                proximityValues[proximityValues.length] = lux;
+            if(proximityValues.size() < MAX_LENGTH) {
+                proximityValues.add(lux);
             }
 
-            if(lux != lightValues[0] && Math.abs(event.values[0] - lightValues[0]) > 50) {
-                changeValues(lux, LIGHT);
+            if(lux != lightValues.get(0) && Math.abs(event.values[0] - lightValues.get(0)) > 50) {
+                lightValues.add(0, lux);
+                lightValues.remove(MAX_LENGTH);
             }
 
             //acá llamarías al método para mostrar en pantalla, en el vector tenés los valores
             textViewLux.setText(Float.toString(lux)); // seteo el ultimo valor que cambio el nivel de luz
         }
 
-    }
-
-    private void changeValues(float value, String type) {
-        if(PROXIMITY.equals(type)) {
-            for(int i = proximityValues.length - 1; i > 0; i--) {
-                proximityValues[i] = proximityValues[i-1];
-            }
-            proximityValues[0] = value;
-        } else {
-            for(int i = lightValues.length - 1; i > 0; i--) {
-                lightValues[i] = lightValues[i-1];
-            }
-            lightValues[0] = value;
-        }
     }
 
 
