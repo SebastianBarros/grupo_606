@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -33,8 +34,11 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
     private Sensor lux;
     private Sensor proximity;
     private List<Float> lightValues = new ArrayList<>();
-    private List<Float> proximityValues = new ArrayList<Float>();
+    private List<Float> proximityValues = new ArrayList<>();
 
+    //esto puede que corresponda a otra clase
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +88,17 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
             sensorManagerLux.registerListener(this,lux,SensorManager.SENSOR_DELAY_NORMAL);
             sensorManagerProximity.registerListener(this,proximity,SensorManager.SENSOR_DELAY_NORMAL);
 
+            //Inicias el sharedPref y creas un editor
+            sharedPref = MenuActivity.this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            editor = sharedPref.edit();
+            //Para levantar los datos usas getFloat. El primer parametro es la key (0 es el valor mas nuevo, 2 el mas viejo) y el 2do parametro es x mi no encuentra nada, devuelve ese nro
+            Log.i("TEST", String.valueOf(sharedPref.getFloat("PROXIMITY0", 404)));
+            Log.i("TEST", String.valueOf(sharedPref.getFloat("PROXIMITY1", 404)));
+            Log.i("TEST", String.valueOf(sharedPref.getFloat("PROXIMITY2", 404)));
+            Log.i("TEST", String.valueOf(sharedPref.getFloat("LIGHT0", 404)));
+            Log.i("TEST", String.valueOf(sharedPref.getFloat("LIGHT1", 404)));
+            Log.i("TEST", String.valueOf(sharedPref.getFloat("LIGHT2", 404)));
+
         }
 
         protected void onPause()
@@ -130,6 +145,7 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
             if(proximity != proximityValues.get(0)){
                 proximityValues.add(0, proximity);
                 proximityValues.remove(MAX_LENGTH);
+                update(PROXIMITY, proximityValues);
             }
             //acá llamarías al método para mostrar en pantalla, en el vector tenés los valores
 
@@ -144,13 +160,14 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
 
             //la primera vez que se ejecute (y no este el sharedPreferences, el array va a estar vacio. Vamos a guardar los primeros 3 valores.
             // Dsp los vamos actualizando a medida que cambien. El 3 es un valor aleatorio que elegi. Si querés mostrar 10 valores en pantalla, entonces acá poner un 10.
-            if(proximityValues.size() < MAX_LENGTH) {
-                proximityValues.add(lux);
+            if(lightValues.size() < MAX_LENGTH) {
+                lightValues.add(lux);
             }
 
             if(lux != lightValues.get(0) && Math.abs(event.values[0] - lightValues.get(0)) > 50) {
                 lightValues.add(0, lux);
                 lightValues.remove(MAX_LENGTH);
+                update(LIGHT, lightValues);
             }
 
             //acá llamarías al método para mostrar en pantalla, en el vector tenés los valores
@@ -159,11 +176,18 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
+    //Cada vez que varia el valor de los sensores, guardo en el SharedPreferences
+    private void update(String type, List<Float> values) {
+
+        for(int i = 0; i < values.size(); i++) {
+            editor.putFloat(type+i, values.get(i));
+        }
+        editor.apply();
+    }
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-        //No se que poronga deberiamos poner aca.
 
     }
 
