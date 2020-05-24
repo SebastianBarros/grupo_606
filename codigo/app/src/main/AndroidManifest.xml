@@ -17,12 +17,17 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity android:name=".RegisterActivity">
         </activity>
+        <receiver android:name=".MainActivity$ReceptorServiceLogin"  android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.RESPONSE_LOGIN"/>
+            </intent-filter>
+        </receiver>
         <service android:name=".ServicesHttpPost">
         </service>
 

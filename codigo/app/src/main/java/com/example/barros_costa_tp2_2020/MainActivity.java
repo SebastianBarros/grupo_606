@@ -22,11 +22,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.net.URI;
 
 public class MainActivity extends AppCompatActivity {
-
+    private static final String LOGIN_ACTION = "com.example.barros_costa_tp2_2020.intent.action.RESPONSE_LOGIN";
+    private String URI_LOGIN = "http://so-unlam.net.ar/api/api/login";
+    private EditText editTextEmail;
+    private EditText editTextPassword;
+    private ReceptorServiceLogin receiver;
 
 
     @Override
@@ -38,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
         Button loginBtn = (Button) findViewById(R.id.buttonLogin);
         Button registerBtn = (Button) findViewById(R.id.buttonRegister);
+        editTextEmail = findViewById(R.id.editTextEmail);
+        editTextPassword = findViewById(R.id.editTextPassword);
+
         registerBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 registerRedirect();
@@ -53,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    
-    
 
     private void registerRedirect() {
         final Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
@@ -62,8 +72,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void login() {
-        String email = findViewById(R.id.editTextEmail).toString();
-        String password = findViewById(R.id.editTextPassword).toString();
+        String email = editTextEmail.getText().toString();
+        String password = editTextPassword.getText().toString();
+        User user = new User(email, password);
+        JSONObject jsonObject = new JSONObject();
+
+
 
         //TODO perfom REST request. If there's an error, we should inform the user. Maybe add an invisible label that becomes visible if an error occurs?
 
@@ -73,13 +87,68 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        if (true) {
+        try {
+            jsonObject.put("env","TEST");
+            jsonObject.put("email",user.getEmail());
+            jsonObject.put("password",user.getPassword());
+            configureBroadCastReceiver();
+            Intent intentLogin = new Intent(MainActivity.this, ServicesHttpPost.class);
+            intentLogin.putExtra("uri",URI_LOGIN);
+            intentLogin.putExtra("jsondata",jsonObject.toString());
+            intentLogin.putExtra("action",LOGIN_ACTION);
+
+            startService(intentLogin);
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        /*if (true) {
             final Intent menuIntent = new Intent(MainActivity.this, MenuActivity.class);
             menuIntent.putExtra("userEmail", email);
             MainActivity.this.startActivity(menuIntent);
         }
+         */
+
 
     }
-}
+    private void configureBroadCastReceiver() {
+        receiver = new ReceptorServiceLogin();
+        IntentFilter filterRegister =  new IntentFilter(LOGIN_ACTION);
+        filterRegister.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(receiver, filterRegister);
+    }
+    public class ReceptorServiceLogin extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String stringJsonData = null;
+            JSONObject jsonData;
+            Gson gson = new Gson();
+            ServerResponse responseLogin;
+            try {
+                stringJsonData = intent.getStringExtra("jsondata");
+                jsonData = new JSONObject(stringJsonData);
+
+                responseLogin = gson.fromJson(stringJsonData, ServerResponse.class);
+                if (responseLogin.getState().equals("success") ) {
+                    Toast.makeText(context.getApplicationContext(),"Login exitoso", Toast.LENGTH_LONG).show();
+                    Intent intentToMenu = new Intent(context,MenuActivity.class);
+                    intentToMenu.putExtra("response",responseLogin);
+                    context.startActivity(intentToMenu);
+                }
+                else
+                {
+                    Toast.makeText(context.getApplicationContext(),"Datos incorrectos. Vuelva a intentar", Toast.LENGTH_LONG).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    }
+
 
 

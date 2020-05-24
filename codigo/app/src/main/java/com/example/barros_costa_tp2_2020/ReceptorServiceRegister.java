@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,12 +18,16 @@ public class ReceptorServiceRegister extends BroadcastReceiver {
 
         String stringJsonData = null;
         JSONObject jsonData;
+        Gson gson = new Gson();
 
         try {
+
             stringJsonData = intent.getStringExtra("jsondata");
             JSONObject jsondata = new JSONObject(stringJsonData);
             Log.i("Logeo Server", "Datos del json"+ stringJsonData);
-            Toast.makeText(context.getApplicationContext(),"Respuesta del server", Toast.LENGTH_LONG).show();
+            Toast.makeText(context.getApplicationContext(),"Respuesta del server OK", Toast.LENGTH_LONG).show();
+
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -21,6 +21,7 @@ import java.net.URI;
 
 
 public class RegisterActivity extends AppCompatActivity {
+    private static final String REGISTER_ACTION = "com.example.barros_costa_tp2_2020.intentservice.action.RESPONSE_REGISTER";
     private String URI_REGISTER = "http://so-unlam.net.ar/api/api/register";
     EditText editTextName;
     EditText editTextLastName;
@@ -29,15 +30,15 @@ public class RegisterActivity extends AppCompatActivity {
     EditText editTextEmail;
     EditText editTextCommision;
     EditText editTextGroup;
-    ReceptorServiceRegister receiver = new ReceptorServiceRegister();
+    ReceptorServiceRegister receiver;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        Button registerBtn = (Button) findViewById(R.id.buttonRegister);
-        Button goBackBtn = (Button) findViewById(R.id.buttonBackLogin);
+        Button registerBtn = findViewById(R.id.buttonRegister);
+        Button goBackBtn = findViewById(R.id.buttonBackLogin);
         editTextName = findViewById(R.id.editTextRegisterName);
         editTextLastName = findViewById(R.id.editTextRegisterLastname);
         editTextEmail = findViewById(R.id.editTextRegisterEmail);
@@ -66,15 +67,15 @@ public class RegisterActivity extends AppCompatActivity {
         User user = createuser();
         //do stuff with the user
         JSONObject jsonObject = new JSONObject();
-        try {
 
-            /*jsonObject.put("name",editTextName.getText().toString());
-            jsonObject.put("lastname",editTextLastName.getText().toString());
-            jsonObject.put("dni",editTextDni.getText().toString());
-            jsonObject.put("email",editTextEmail.getText().toString());
-            jsonObject.put("password",editTextPassword.getText().toString());
-            jsonObject.put("commission",editTextCommision.getText().toString());
-            jsonObject.put("group",editTextGroup.getText().toString());*/
+
+        //if everything is ok
+        //Check if there's an active network connection
+        if(!InternetConnectionService.thereIsInternetConnection(RegisterActivity.this)){
+            Toast.makeText(RegisterActivity.this, "No se encuentra conectado a Internet", Toast.LENGTH_LONG).show();
+            return;
+        }
+        try {
 
             jsonObject.put("env","TEST");
             jsonObject.put("name",user.getName());
@@ -84,26 +85,19 @@ public class RegisterActivity extends AppCompatActivity {
             jsonObject.put("password",user.getPassword());
             jsonObject.put("commission",user.getCourse());
             jsonObject.put("group",user.getGroup());
-            Toast.makeText(RegisterActivity.this,jsonObject.toString(),Toast.LENGTH_LONG).show();
-
             Intent intentRegister = new Intent(RegisterActivity.this, ServicesHttpPost.class);
+            intentRegister.putExtra("action",REGISTER_ACTION);
             intentRegister.putExtra("uri",URI_REGISTER);
             intentRegister.putExtra("jsondata",jsonObject.toString());
-
             startService(intentRegister);
+            configureBroadcastReceiver();
+
         }
         catch (JSONException e)
         {
             e.printStackTrace();
         }
 
-        //if everything is ok
-        //Check if there's an active network connection
-        if(!InternetConnectionService.thereIsInternetConnection(RegisterActivity.this)){
-            Toast.makeText(RegisterActivity.this, "No se encuentra conectado a Internet", Toast.LENGTH_LONG).show();
-            return;
-        }
-        configureBroadcastReceiver();
         /*if(true) {
             RegisterActivity.this.startActivity(new Intent(RegisterActivity.this, MenuActivity.class));
         }*/
@@ -116,11 +110,11 @@ public class RegisterActivity extends AppCompatActivity {
                         editTextGroup.getText().toString());
     }
 
-
     private void configureBroadcastReceiver (){
-        IntentFilter filterRegiser =  new IntentFilter("com.example.intentservice.intent.action.RESPONSE_REGISTER");
-        filterRegiser.addCategory(Intent.CATEGORY_DEFAULT);
-        registerReceiver(receiver, filterRegiser);
+        receiver = new ReceptorServiceRegister();
+        IntentFilter filterRegister =  new IntentFilter(REGISTER_ACTION);
+        filterRegister.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(receiver, filterRegister);
 
     }
 

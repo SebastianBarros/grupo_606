@@ -3,16 +3,23 @@ package com.example.barros_costa_tp2_2020;
 import android.app.IntentService;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 
 public class ServicesHttpPost extends IntentService {
@@ -32,24 +39,25 @@ public class ServicesHttpPost extends IntentService {
     //este metodo inicia cuando se llama startService
     @Override
     protected void onHandleIntent(Intent intent) {
+        Bundle extras = intent.getExtras();
+        String action = extras.getString("action");
 
         try {
 
             String uri = intent.getExtras().getString("uri");
             JSONObject jsonData = new JSONObject(intent.getExtras().getString("jsondata"));
-            excecutePost(uri,jsonData);
+            excecutePost(uri,jsonData,action);
 
         }
         catch (Exception e)
         {
             mException = e;
+            return;
         }
 
     }
 
-    protected void excecutePost(String uri, JSONObject jsonData) {
-
-        Intent intentPostToRegisterActivity;
+    protected void excecutePost(String uri, JSONObject jsonData, String action) {
 
         //llamado al metodo post, contiene el armado del paquete del POST
 
@@ -66,10 +74,11 @@ public class ServicesHttpPost extends IntentService {
         }
 
         //Intent que manda los datos del response al registerActivity
+        Intent intentPostToBroadcast = new Intent(action);
+        // Intent intentPostToBroadcast = new Intent(action);
+        intentPostToBroadcast.putExtra("jsondata",result);
+        sendBroadcast(intentPostToBroadcast);
 
-        intentPostToRegisterActivity = new Intent("com.example.intentservice.intent.action.RESPONSE_REGISTER");
-        intentPostToRegisterActivity.putExtra("jsondata",result);
-        sendBroadcast(intentPostToRegisterActivity);
     }
 
     private String POST(String uri, JSONObject jsonData) {
@@ -80,7 +89,6 @@ public class ServicesHttpPost extends IntentService {
 
         int responseCode;
         Exception exceptionPOST = null;
-
 
         try {
 
@@ -100,12 +108,7 @@ public class ServicesHttpPost extends IntentService {
             urlConnection.setRequestMethod("POST");
             // tipo de request
 
-
             // aca creo el flujo de datos para el body del json
-
-
-
-            Log.i("Logeo server", "se envio al servidor el body :" + jsonData.toString());
 
             DataOutputStream dataOutputStreamPost = new DataOutputStream(urlConnection.getOutputStream());
             dataOutputStreamPost.write((jsonData.toString().getBytes("UTF-8")));
@@ -119,9 +122,9 @@ public class ServicesHttpPost extends IntentService {
             //se queda bloqueado el hilo hasta obtener respuesta
 
             responseCode = urlConnection.getResponseCode();
-            Log.i("CODE", String.valueOf(responseCode));
+
             if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
-                result = covertInputStreamToString(new InputStreamReader((urlConnection.getInputStream())).toString());
+               result = covertInputStreamToString(new InputStreamReader((urlConnection.getInputStream())));
             }
             else {
                 result = "NO_OK";
@@ -135,8 +138,15 @@ public class ServicesHttpPost extends IntentService {
         }
     }
 
-    private String covertInputStreamToString(String toString) {
-        return toString;
+    private String covertInputStreamToString(InputStreamReader inputStreamReader) throws IOException {
+        BufferedReader reader = new BufferedReader(inputStreamReader);
+        StringBuffer stringBuffer = new StringBuffer();
+        String result;
+        while((result = reader.readLine())!= null){
+            stringBuffer.append(result);
+        }
+        return stringBuffer.toString();
     }
+
 }
 
