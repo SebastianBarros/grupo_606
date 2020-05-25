@@ -1,34 +1,17 @@
 package com.example.barros_costa_tp2_2020;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkCapabilities;
-import android.net.NetworkInfo;
-import android.net.NetworkRequest;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.material.tabs.TabLayout;
-import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.Serializable;
-import java.net.URI;
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOGIN_ACTION = "com.example.barros_costa_tp2_2020.intent.action.RESPONSE_LOGIN";
@@ -91,12 +74,12 @@ public class MainActivity extends AppCompatActivity {
             jsonObject.put("env","TEST");
             jsonObject.put("email",user.getEmail());
             jsonObject.put("password",user.getPassword());
-            configureBroadCastReceiver();
+
             Intent intentLogin = new Intent(MainActivity.this, ServicesHttpPost.class);
             intentLogin.putExtra("uri",URI_LOGIN);
             intentLogin.putExtra("jsondata",jsonObject.toString());
             intentLogin.putExtra("action",LOGIN_ACTION);
-
+            configureBroadCastReceiver();
             startService(intentLogin);
 
 
@@ -120,35 +103,8 @@ public class MainActivity extends AppCompatActivity {
         filterRegister.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(receiver, filterRegister);
     }
-    public class ReceptorServiceLogin extends BroadcastReceiver{
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String stringJsonData = null;
-            JSONObject jsonData;
-            Gson gson = new Gson();
-            ServerResponse responseLogin;
-            try {
-                stringJsonData = intent.getStringExtra("jsondata");
-                jsonData = new JSONObject(stringJsonData);
 
-                responseLogin = gson.fromJson(stringJsonData, ServerResponse.class);
-                if (responseLogin.getState().equals("success") ) {
-                    Toast.makeText(context.getApplicationContext(),"Login exitoso", Toast.LENGTH_LONG).show();
-                    Intent intentToMenu = new Intent(context,MenuActivity.class);
-                    intentToMenu.putExtra("response",responseLogin);
-                    context.startActivity(intentToMenu);
-                }
-                else
-                {
-                    Toast.makeText(context.getApplicationContext(),"Datos incorrectos. Vuelva a intentar", Toast.LENGTH_LONG).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    }
+}
 
 
 

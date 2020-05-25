@@ -3,8 +3,10 @@ package com.example.barros_costa_tp2_2020;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.LoaderManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -18,16 +20,29 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 public class MenuActivity extends AppCompatActivity implements SensorEventListener {
 
+    private static final String URI_EVENT = "http://so-unlam.net.ar/api/api/event";
+    private static final String EVENT_ACTION = "com.example.barros_costa_tp2_2020.intent.action.RESPONSE_EVENT";
     // variables de managment de sensores
     private SensorManager sensorManagerLux;
     private SensorManager sensorManagerProximity;
     //objeto sensor donde seran registrados cada sensor
     private Sensor lux;
     private Sensor proximity;
+    private Intent intentReceived;
+    private Bundle extrasReceived;
+    private String token;
+    JSONObject jsonObject;
+    TextView textViewLux;
+    TextView textViewProximity;
+    private float proximityValue,luxValue;
+    ReceptorServiceEvent receiver;// variables tipo float para almacenar los valores captados por el sensor
+
 
 
     @Override
@@ -36,24 +51,37 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_menu);
         LinearLayout lightLayout = findViewById(R.id.linearLayoutLux);
         LinearLayout  proximityLayout = findViewById(R.id.linearLayoutProximity);
-        Button saveLightData = (Button) findViewById(R.id.buttonRegisterLuxSensor);
-        Button saveProximityData = (Button) findViewById(R.id.buttonRegisterProximitySensor);
-        Button goBackToLogin = (Button) findViewById(R.id.buttonBack);
+        Button saveLightData = findViewById(R.id.buttonRegisterLuxSensor);
+        Button saveProximityData =  findViewById(R.id.buttonRegisterProximitySensor);
+        Button goBackToLogin = findViewById(R.id.buttonBack);
+
 
         sensorManagerLux = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         lux = sensorManagerLux.getDefaultSensor(Sensor.TYPE_LIGHT);
         sensorManagerProximity = (SensorManager) getSystemService((Context.SENSOR_SERVICE));
         proximity = sensorManagerProximity.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-
+        intentReceived = getIntent();
+        extrasReceived = intentReceived.getExtras();
+        token = extrasReceived.getString("token");
+        textViewLux = findViewById(R.id.textViewLux);
+        textViewProximity = findViewById(R.id.textViewProximity);
 
         saveLightData.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                saveLightData();
+                try {
+                    saveLightData();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
         saveProximityData.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                saveProximityData();
+                try {
+                    saveProximityData();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
         goBackToLogin.setOnClickListener(new View.OnClickListener() {
@@ -91,12 +119,43 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
         MenuActivity.this.startActivity(new Intent(MenuActivity.this, MainActivity.class));
     }
 
-    private void saveProximityData() {
-        //do stuff
+    private void saveProximityData() throws JSONException {
+        jsonObject = new JSONObject();
+        jsonObject.put("env","TEST");
+        jsonObject.put("type_events","Proximity Sensor");
+        jsonObject.put("state","ACTIVO");
+        jsonObject.put("description",String.valueOf(proximityValue));
+
+        Intent intentEvent = new Intent(MenuActivity.this, ServicePostEvent.class);
+        intentEvent.putExtra("uri",URI_EVENT);
+        intentEvent.putExtra("token",token);
+        intentEvent.putExtra("jsondata",jsonObject.toString());
+        intentEvent.putExtra("action",EVENT_ACTION);
+        configureBroadCastReceiver();
+        startService(intentEvent);
     }
 
-    private void saveLightData() {
-        //do stuff
+    private void configureBroadCastReceiver() {
+      receiver = new ReceptorServiceEvent();
+        IntentFilter filterRegister =  new IntentFilter(EVENT_ACTION);
+        filterRegister.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(receiver, filterRegister);
+    }
+
+    private void saveLightData() throws JSONException {
+        jsonObject = new JSONObject();
+        jsonObject.put("env","TEST");
+        jsonObject.put("type_events","Lux Sensor");
+        jsonObject.put("state","ACTIVO");
+        jsonObject.put("description",String.valueOf(luxValue));
+
+        Intent intentEvent = new Intent(MenuActivity.this, ServicePostEvent.class);
+        intentEvent.putExtra("uri",URI_EVENT);
+        intentEvent.putExtra("token",token);
+        intentEvent.putExtra("jsondata",jsonObject.toString());
+        intentEvent.putExtra("action",EVENT_ACTION);
+        configureBroadCastReceiver();
+        startService(intentEvent);
     }
 
     @Override
@@ -104,22 +163,21 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
 
         // referencio los textView del layout.
         // esto solo muestra en pantalla
-        TextView textViewLux = (TextView) findViewById(R.id.textViewLux);
-        TextView textViewProximity = (TextView) findViewById(R.id.textViewProximity);
-        float proximity,lux; // variables tipo float para almacenar los valores captados por el sensor
+
+
 
         //Esta lógica es para diferenciar los eventos del sensor .getType me da el tipo de sensor que mensajeo a event.sensor
         if (event.sensor.getType() == Sensor.TYPE_PROXIMITY)
         {
-            proximity = event.values[0];
-            Log.i("valor proximidad:", String.valueOf(proximity));
-            textViewProximity.setText(Float.toString(proximity));  //seteo el ultimo valor que cambio de proximidad
+            proximityValue = event.values[0];
+            Log.i("valor proximidad:", String.valueOf(proximityValue));
+            textViewProximity.setText(Float.toString(proximityValue));  //seteo el ultimo valor que cambio de proximidad
         }
         if (event.sensor.getType() == Sensor.TYPE_LIGHT)
         {
-            lux = event.values[0];
-            Log.i("valor luz:", String.valueOf(lux));
-            textViewLux.setText(Float.toString(lux)); // seteo el ultimo valor que cambio el nivel de luz
+            luxValue = event.values[0];
+            Log.i("valor luz:", String.valueOf(luxValue));
+            textViewLux.setText(Float.toString(luxValue)); // seteo el ultimo valor que cambio el nivel de luz
         }
 
     }

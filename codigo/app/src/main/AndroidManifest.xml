@@ -13,7 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MenuActivity"></activity>
+        <activity android:name=".MenuActivity">
+
+        </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,13 +25,17 @@
         </activity>
         <activity android:name=".RegisterActivity">
         </activity>
-        <receiver android:name=".MainActivity$ReceptorServiceLogin"  android:exported="true">
+        <receiver android:name=".ReceptorServiceLogin"  android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.RESPONSE_LOGIN"/>
             </intent-filter>
         </receiver>
         <service android:name=".ServicesHttpPost">
         </service>
+        <service android:name=".ServicePostEvent">
+
+        </service>
+
 
         <meta-data
             android:name="preloaded_fonts"

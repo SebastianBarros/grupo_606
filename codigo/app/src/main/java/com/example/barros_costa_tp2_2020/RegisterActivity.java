@@ -21,7 +21,7 @@ import java.net.URI;
 
 
 public class RegisterActivity extends AppCompatActivity {
-    private static final String REGISTER_ACTION = "com.example.barros_costa_tp2_2020.intentservice.action.RESPONSE_REGISTER";
+    private static final String REGISTER_ACTION = "com.example.barros_costa_tp2_2020.action.RESPONSE_REGISTER";
     private String URI_REGISTER = "http://so-unlam.net.ar/api/api/register";
     EditText editTextName;
     EditText editTextLastName;
@@ -89,8 +89,9 @@ public class RegisterActivity extends AppCompatActivity {
             intentRegister.putExtra("action",REGISTER_ACTION);
             intentRegister.putExtra("uri",URI_REGISTER);
             intentRegister.putExtra("jsondata",jsonObject.toString());
-            startService(intentRegister);
             configureBroadcastReceiver();
+            startService(intentRegister);
+
 
         }
         catch (JSONException e)

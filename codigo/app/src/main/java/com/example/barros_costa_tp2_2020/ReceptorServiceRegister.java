@@ -19,15 +19,21 @@ public class ReceptorServiceRegister extends BroadcastReceiver {
         String stringJsonData = null;
         JSONObject jsonData;
         Gson gson = new Gson();
-
+        ServerResponse responseRegister;
         try {
-
             stringJsonData = intent.getStringExtra("jsondata");
-            JSONObject jsondata = new JSONObject(stringJsonData);
-            Log.i("Logeo Server", "Datos del json"+ stringJsonData);
-            Toast.makeText(context.getApplicationContext(),"Respuesta del server OK", Toast.LENGTH_LONG).show();
-
-
+            jsonData = new JSONObject(stringJsonData);
+            responseRegister = gson.fromJson(stringJsonData, ServerResponse.class);
+            if (responseRegister.getState().equals("success") ) {
+                Toast.makeText(context.getApplicationContext(),"Registro exitoso", Toast.LENGTH_LONG).show();
+                Intent intentToMenu = new Intent(context,MenuActivity.class);
+                intentToMenu.putExtra("response",responseRegister);
+                context.startActivity(intentToMenu);
+            }
+            else
+            {
+                Toast.makeText(context.getApplicationContext(),"Datos incorrectos. Vuelva a intentar", Toast.LENGTH_LONG).show();
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
