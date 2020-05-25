@@ -30,7 +30,7 @@
                 <action android:name="android.intent.action.RESPONSE_LOGIN"/>
             </intent-filter>
         </receiver>
-        <service android:name=".ServicesHttpPost">
+        <service android:name=".ServicesPostUser">
         </service>
         <service android:name=".ServicePostEvent">
 

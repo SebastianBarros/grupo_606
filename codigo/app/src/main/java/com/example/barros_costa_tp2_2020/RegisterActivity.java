@@ -2,22 +2,16 @@ package com.example.barros_costa_tp2_2020;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.URI;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -85,7 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
             jsonObject.put("password",user.getPassword());
             jsonObject.put("commission",user.getCourse());
             jsonObject.put("group",user.getGroup());
-            Intent intentRegister = new Intent(RegisterActivity.this, ServicesHttpPost.class);
+            Intent intentRegister = new Intent(RegisterActivity.this, ServicesPostUser.class);
             intentRegister.putExtra("action",REGISTER_ACTION);
             intentRegister.putExtra("uri",URI_REGISTER);
             intentRegister.putExtra("jsondata",jsonObject.toString());

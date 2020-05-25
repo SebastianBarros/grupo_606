@@ -2,8 +2,6 @@ package com.example.barros_costa_tp2_2020;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.LoaderManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -13,16 +11,17 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
 
 public class MenuActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -40,7 +39,9 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
     JSONObject jsonObject;
     TextView textViewLux;
     TextView textViewProximity;
-    private float proximityValue,luxValue;
+    private float proximityValue;
+    private float luxValue;
+    private ArrayList<Float> stackluxValue = new ArrayList<Float>();
     ReceptorServiceEvent receiver;// variables tipo float para almacenar los valores captados por el sensor
 
 
@@ -63,7 +64,7 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
         intentReceived = getIntent();
         extrasReceived = intentReceived.getExtras();
         token = extrasReceived.getString("token");
-        textViewLux = findViewById(R.id.textViewLux);
+        textViewLux = findViewById(R.id.textViewLux1);
         textViewProximity = findViewById(R.id.textViewProximity);
 
         saveLightData.setOnClickListener(new View.OnClickListener() {
@@ -175,8 +176,8 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
         }
         if (event.sensor.getType() == Sensor.TYPE_LIGHT)
         {
-            luxValue = event.values[0];
-            Log.i("valor luz:", String.valueOf(luxValue));
+            //luxValue = event.values[0];
+
             textViewLux.setText(Float.toString(luxValue)); // seteo el ultimo valor que cambio el nivel de luz
         }
 

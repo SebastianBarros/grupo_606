@@ -22,18 +22,17 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 
-public class ServicesHttpPost extends IntentService {
+public class ServicesPostUser extends IntentService {
 
     private Exception mException = null;
 
-    public ServicesHttpPost() {
-        super("ServicesHttpGET");
+    public ServicesPostUser() {
+        super("");
     }
 
     @Override
         public void onCreate() {
         super.onCreate();
-        Log.i("SERVICE","Service OnCreate()");
     }
 
     //este metodo inicia cuando se llama startService
@@ -44,17 +43,19 @@ public class ServicesHttpPost extends IntentService {
 
         try {
 
+            //recibo los parametros que manda el intent que envio el inicio de este servicio
+
             String uri = intent.getExtras().getString("uri");
             JSONObject jsonData = new JSONObject(intent.getExtras().getString("jsondata"));
-            excecutePost(uri,jsonData,action);
 
+            // para saber el tipo de accion que me pidio el inicio de servicio -> LOGIN, REGISTRO
+            excecutePost(uri,jsonData,action);
         }
         catch (Exception e)
         {
             mException = e;
             return;
         }
-
     }
 
     protected void excecutePost(String uri, JSONObject jsonData, String action) {
@@ -65,17 +66,12 @@ public class ServicesHttpPost extends IntentService {
 
         if (result == null)
         {
-            Log.e("Register server", "Error en get: \n"+mException.toString());
-            return;
-        }
-        if (result == "NO_OK"){
-            Log.e("Register server", "Response NO_OK");
+            Log.e("SERVER","error de conexion con server");
             return;
         }
 
         //Intent que manda los datos del response al registerActivity
         Intent intentPostToBroadcast = new Intent(action);
-        // Intent intentPostToBroadcast = new Intent(action);
         intentPostToBroadcast.putExtra("jsondata",result);
         sendBroadcast(intentPostToBroadcast);
 
@@ -126,13 +122,12 @@ public class ServicesHttpPost extends IntentService {
             if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
                result = covertInputStreamToString(new InputStreamReader((urlConnection.getInputStream())));
             }
-            else {
+            else
+            {
                 result = "NO_OK";
             }
-
         urlConnection.disconnect();
             return result;
-
         } catch (Exception e) {
             return result;
         }

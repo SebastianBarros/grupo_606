@@ -38,6 +38,27 @@
             android:text="@string/text_view_lux"
             android:textSize="30sp"
             android:typeface="sans" />
+
+        <TextView
+            android:id="@+id/textViewLux1"
+            android:layout_width="match_parent"
+            android:layout_height="53dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="@string/text_view_lux"
+            android:textSize="30sp"
+            android:typeface="sans" />
+
+        <TextView
+            android:id="@+id/textViewLux2"
+            android:layout_width="match_parent"
+            android:layout_height="53dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="@string/text_view_lux"
+            android:textSize="30sp"
+            android:typeface="sans" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -53,9 +74,25 @@
         app:layout_constraintVertical_bias="0.585" >
 
         <TextView
-            android:id="@+id/textViewProximity"
+            android:id="@+id/textViewProximity3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/text_view_proximity"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/textViewProximity2"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:gravity="center"
+            android:text="@string/text_view_proximity"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/textViewProximity"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
             android:gravity="center"
             android:text="@string/text_view_proximity"
             android:textSize="30sp" />

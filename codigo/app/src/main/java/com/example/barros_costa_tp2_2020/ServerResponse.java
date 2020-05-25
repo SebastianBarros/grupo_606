@@ -9,10 +9,12 @@ public class ServerResponse implements Serializable {
     private String env;
 
 
-    public ServerResponse(String token, String state, String env) {
+
+    public ServerResponse(String token, String state, String env,String msg) {
         this.token = token;
         this.state = state;
         this.env = env;
+
     }
 
     public String getToken() {
@@ -22,11 +24,6 @@ public class ServerResponse implements Serializable {
     public String getState() {
         return state;
     }
-
-    public String getEnv() {
-        return env;
-    }
-
 
     //petición login
     //petición registro
