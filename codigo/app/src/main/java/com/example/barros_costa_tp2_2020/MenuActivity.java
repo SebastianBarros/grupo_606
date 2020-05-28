@@ -1,7 +1,5 @@
 package com.example.barros_costa_tp2_2020;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -17,18 +15,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Stack;
 
 
 public class MenuActivity extends AppCompatActivity implements SensorEventListener {
@@ -50,8 +43,14 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
     private Bundle extrasReceived;
     private String token;
     JSONObject jsonObject;
-    TextView textViewLux;
-    TextView textViewProximity;
+    private List<TextView> lightArray = new ArrayList<>();
+    private List<TextView> proximityArray = new ArrayList<>();
+    private TextView textViewLux;
+    private TextView textViewLux1;
+    private TextView textViewLux2;
+    private TextView textViewProximity;
+    private TextView textViewProximity1;
+    private TextView textViewProximity2;
     private float proximityValue;
     private float luxValue;
     private ArrayList<Float> stackluxValue = new ArrayList<Float>();
@@ -83,8 +82,22 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
         intentReceived = getIntent();
         extrasReceived = intentReceived.getExtras();
         token = extrasReceived.getString("token");
-        textViewLux = findViewById(R.id.textViewLux1);
+
+        textViewLux = findViewById(R.id.textViewLux);
+        textViewLux1 = findViewById(R.id.textViewLux1);
+        textViewLux2 = findViewById(R.id.textViewLux2);
+
+        lightArray.add(0, textViewLux);
+        lightArray.add(1, textViewLux1);
+        lightArray.add(2, textViewLux2);
+
         textViewProximity = findViewById(R.id.textViewProximity);
+        textViewProximity1 = findViewById(R.id.textViewProximity1);
+        textViewProximity2 = findViewById(R.id.textViewProximity2);
+
+        proximityArray.add(0, textViewProximity);
+        proximityArray.add(1, textViewProximity1);
+        proximityArray.add(2, textViewProximity2);
 
         saveLightData.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -194,21 +207,6 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        // referencio los textView del layout.
-        // esto solo muestra en pantalla
-
-        //Esta lógica es para diferenciar los eventos del sensor .getType me da el tipo de sensor que mensajeo a event.sensor
-
-        if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
-            proximityValue = event.values[0];
-            Log.i("valor proximidad:", String.valueOf(proximityValue));
-            textViewProximity.setText(Float.toString(proximityValue));  //seteo el ultimo valor que cambio de proximidad
-        }
-        if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
-            //luxValue = event.values[0];
-
-            textViewLux.setText(Float.toString(luxValue)); // seteo el ultimo valor que cambio el nivel de luz
-
             if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
                 proximityValue = event.values[0];
                 Log.i("valor proximidad:", String.valueOf(proximity) + event.timestamp);
@@ -228,8 +226,15 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
                 }
                 //acá llamarías al método para mostrar en pantalla, en el vector tenés los valores
 
-                textViewProximity.setText(Float.toString(proximityValue));  //seteo el ultimo valor que cambio de proximidad
-
+                for(int i = 0; i < proximityValues.size(); i++){
+                    proximityArray.get(i).setText(proximityValues.get(i).toString());
+                }
+                /*
+                textViewProximity.setText(proximityValues.get(0).toString());  //seteo el ultimo valor que cambio de proximidad
+                textViewProximity1.setText(proximityValues.get(1).toString());
+                textViewProximity2.setText(proximityValues.get(2).toString());
+                /
+                 */
             }
 
             if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
@@ -243,30 +248,32 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
                     lightValues.add(luxValue);
                 }
 
-                if (luxValue != lightValues.get(0) && Math.abs(event.values[0] - lightValues.get(0)) > 50) {
-                    lightValues.add(0, luxValue);
-                    lightValues.remove(MAX_LENGTH);
-                    update(LIGHT, lightValues);
+                if(Math.abs(event.values[0] - lightValues.get(0)) <= 50) {
+                    return;
                 }
 
-                //acá llamarías al método para mostrar en pantalla, en el vector tenés los valores
-                textViewLux.setText(Float.toString(luxValue)); // seteo el ultimo valor que cambio el nivel de luz
+                lightValues.add(0, luxValue);
+                lightValues.remove(MAX_LENGTH);
+                update(LIGHT, lightValues);
+
+                for(int i = 0; i < lightValues.size(); i++){
+                    lightArray.get(i).setText(lightValues.get(i).toString());
+                }
+
+                /*
+                textViewLux.setText(lightValues.get(0).toString());
+                textViewLux1.setText(lightValues.get(1).toString());
+                textViewLux2.setText(lightValues.get(2).toString());
+                *
+                 */
             }
 
-        }
-
-        //Cada vez que varia el valor de los sensores, guardo en el SharedPreferences
-
-
-        //obtener el nombre del user
-        //botón logout
-        //botón registrar -> creás un hilo aparte donde levantás los datos de la pantalla y hacés 2 post con diferente type y datos.
-        //actualizar las grillas con los datos de los sensores
 
     }
 
-    private void update(String type, List<Float> values) {
+    //Cada vez que varia el valor de los sensores, guardo en el SharedPreferences
 
+    private void update(String type, List<Float> values) {
 
         for (int i = 0; i < values.size(); i++) {
             editor.putFloat(type + i, values.get(i));

@@ -2,15 +2,10 @@ package com.example.barros_costa_tp2_2020;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class ReceptorServiceLogin extends BroadcastReceiver {
 
