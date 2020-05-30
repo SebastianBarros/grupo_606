@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -75,6 +73,7 @@ public class ServicePostEvent extends IntentService {
         Intent intentPostToBroadcast = new Intent(action);
         // Intent intentPostToBroadcast = new Intent(action);
         intentPostToBroadcast.putExtra("jsondata",result);
+        Log.i("Json data", result);
         sendBroadcast(intentPostToBroadcast);
 
     }

@@ -1,5 +1,6 @@
 package com.example.barros_costa_tp2_2020;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -31,6 +32,7 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
     private static final int MAX_LENGTH = 3;
     private static final String URI_EVENT = "http://so-unlam.net.ar/api/api/event";
     private static final String EVENT_ACTION = "com.example.barros_costa_tp2_2020.intent.action.RESPONSE_EVENT";
+    private static final Integer DEFAULT = 404;
 
     // variables de managment de sensores
     private SensorManager sensorManagerLux;
@@ -41,6 +43,7 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
 
     private Intent intentReceived;
     private Bundle extrasReceived;
+    private Intent backgroundService;
     private String token;
     JSONObject jsonObject;
     private List<TextView> lightArray = new ArrayList<>();
@@ -64,6 +67,7 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
 
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +103,11 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
         proximityArray.add(1, textViewProximity1);
         proximityArray.add(2, textViewProximity2);
 
+        sharedPref = MenuActivity.this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
+
+        loadSensorData();
+
         saveLightData.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 try {
@@ -122,13 +131,15 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
                 goBackToLogin();
             }
         });
-
-
-        //disparar 2 hilos que manejen el sensor de luz y de proximidad
-
-
     }
 
+    private void startBackgroundService() {
+        backgroundService = new Intent(MenuActivity.this, BackgroundProcess.class);
+        backgroundService.putExtra("token", token);
+        startService(backgroundService);
+    }
+
+    @SuppressLint("CommitPrefEdits")
     protected void onResume() {
         super.onResume();
         //los sensores no haran nada hasta que la actividad este en primer plano.
@@ -140,15 +151,10 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
         //Inicias el sharedPref y creas un editor
         sharedPref = MenuActivity.this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
-        //Para levantar los datos usas getFloat. El primer parametro es la key (0 es el valor mas nuevo, 2 el mas viejo) y el 2do parametro es x mi no encuentra nada, devuelve ese nro
-        Log.i("TEST", String.valueOf(sharedPref.getFloat("PROXIMITY0", 404)));
-        Log.i("TEST", String.valueOf(sharedPref.getFloat("PROXIMITY1", 404)));
-        Log.i("TEST", String.valueOf(sharedPref.getFloat("PROXIMITY2", 404)));
-        Log.i("TEST", String.valueOf(sharedPref.getFloat("LIGHT0", 404)));
-        Log.i("TEST", String.valueOf(sharedPref.getFloat("LIGHT1", 404)));
-        Log.i("TEST", String.valueOf(sharedPref.getFloat("LIGHT2", 404)));
-
+        startBackgroundService();
     }
+
+
 
     protected void onPause() {
         super.onPause();
@@ -156,8 +162,25 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
         sensorManagerProximity.unregisterListener(this);
     }
 
+    protected void onStop() {
+        super.onStop();
+        stopService(backgroundService);
+    }
+
     private void goBackToLogin() {
         MenuActivity.this.startActivity(new Intent(MenuActivity.this, MainActivity.class));
+    }
+
+
+    private void loadSensorData() {
+
+        for(int i = 0; i < lightArray.size(); i++) {
+            lightArray.get(i).setText(String.valueOf(sharedPref.getFloat("LIGHT" + i, 0)));
+        }
+
+        for(int i = 0; i < proximityArray.size(); i++) {
+            proximityArray.get(i).setText(String.valueOf(sharedPref.getFloat("PROXIMITY" + i, 0)));
+        }
     }
 
     private void saveProximityData() throws JSONException {
@@ -219,22 +242,18 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
                     proximityValues.add(proximityValue);
                 }
 
-                if (proximityValue != proximityValues.get(0)) {
+                if (proximityValue == proximityValues.get(0)) {
+                    return;
+                }
                     proximityValues.add(0, proximityValue);
                     proximityValues.remove(MAX_LENGTH);
                     update(PROXIMITY, proximityValues);
-                }
+
                 //acá llamarías al método para mostrar en pantalla, en el vector tenés los valores
 
                 for(int i = 0; i < proximityValues.size(); i++){
                     proximityArray.get(i).setText(proximityValues.get(i).toString());
                 }
-                /*
-                textViewProximity.setText(proximityValues.get(0).toString());  //seteo el ultimo valor que cambio de proximidad
-                textViewProximity1.setText(proximityValues.get(1).toString());
-                textViewProximity2.setText(proximityValues.get(2).toString());
-                /
-                 */
             }
 
             if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
@@ -259,13 +278,6 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
                 for(int i = 0; i < lightValues.size(); i++){
                     lightArray.get(i).setText(lightValues.get(i).toString());
                 }
-
-                /*
-                textViewLux.setText(lightValues.get(0).toString());
-                textViewLux1.setText(lightValues.get(1).toString());
-                textViewLux2.setText(lightValues.get(2).toString());
-                *
-                 */
             }
 
 

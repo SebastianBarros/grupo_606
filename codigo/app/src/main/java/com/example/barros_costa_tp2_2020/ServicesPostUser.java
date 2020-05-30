@@ -1,25 +1,18 @@
 package com.example.barros_costa_tp2_2020;
 
 import android.app.IntentService;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 
 public class ServicesPostUser extends IntentService {
@@ -64,8 +57,7 @@ public class ServicesPostUser extends IntentService {
 
         String result = POST(uri,jsonData);
 
-        if (result == null)
-        {
+        if (result == null) {
             Log.e("SERVER","error de conexion con server");
             return;
         }

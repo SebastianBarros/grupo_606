@@ -36,6 +36,9 @@
 
         </service>
 
+        <service android:name=".BackgroundProcess">
+
+        </service>
 
         <meta-data
             android:name="preloaded_fonts"

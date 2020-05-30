@@ -14,7 +14,6 @@ public class ServerResponse implements Serializable {
         this.token = token;
         this.state = state;
         this.env = env;
-
     }
 
     public String getToken() {
