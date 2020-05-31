@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String URI_LOGIN = "http://so-unlam.net.ar/api/api/login";
     private static final String LOGIN_ACTION = "com.example.barros_costa_tp2_2020.intent.action.RESPONSE_LOGIN";
-    private static final String  ENV = "TEST";
+    private static final String  ENV = "DEV";
     //variables para referenciar la logica con el layout
     private EditText editTextEmail;
     private EditText editTextPassword;

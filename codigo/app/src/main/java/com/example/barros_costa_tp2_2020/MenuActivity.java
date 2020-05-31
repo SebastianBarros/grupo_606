@@ -185,7 +185,7 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
 
     private void saveProximityData() throws JSONException {
         jsonObject = new JSONObject();
-        jsonObject.put("env", "TEST");
+        jsonObject.put("env", "DEV");
         jsonObject.put("type_events", "Proximity Sensor");
         jsonObject.put("state", "ACTIVO");
         jsonObject.put("description", String.valueOf(proximityValue));
@@ -208,7 +208,7 @@ public class MenuActivity extends AppCompatActivity implements SensorEventListen
 
     private void saveLightData() throws JSONException {
         jsonObject = new JSONObject();
-        jsonObject.put("env", "TEST");
+        jsonObject.put("env", "DEV");
         jsonObject.put("type_events", "Lux Sensor");
         jsonObject.put("state", "ACTIVO");
         jsonObject.put("description", String.valueOf(luxValue));

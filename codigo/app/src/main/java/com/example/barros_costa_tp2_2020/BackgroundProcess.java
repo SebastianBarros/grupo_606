@@ -59,7 +59,7 @@ public class BackgroundProcess extends Service {
             public void run() {
                 try {
                     jsonObject = new JSONObject();
-                    jsonObject.put("env", "TEST");
+                    jsonObject.put("env", "DEV");
                     jsonObject.put("type_events", "Background process");
                     jsonObject.put("state", "ACTIVO");
                     jsonObject.put("description", "Proceso corriendo en el background");
