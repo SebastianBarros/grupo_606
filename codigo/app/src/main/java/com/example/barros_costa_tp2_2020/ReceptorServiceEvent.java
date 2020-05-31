@@ -16,7 +16,12 @@ public class ReceptorServiceEvent extends BroadcastReceiver {
         stringJsonData = intent.getStringExtra("jsondata");
         responseLogin = gson.fromJson(stringJsonData, ServerResponse.class);
         if (responseLogin.getState().equals("success") ) {
-            Toast.makeText(context.getApplicationContext(),"Evento registrado de forma exitosa", Toast.LENGTH_LONG).show();
+            if ("Background process".equals(responseLogin.getEventType())){
+                Toast.makeText(context.getApplicationContext(),"Evento del proceso del background registrado.", Toast.LENGTH_LONG).show();
+            } else  {
+                Toast.makeText(context.getApplicationContext(),"Evento registrado de forma exitosa", Toast.LENGTH_LONG).show();
+            }
+
 
         }
         else
